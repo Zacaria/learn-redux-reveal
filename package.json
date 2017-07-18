@@ -1,0 +1,23 @@
+{
+  "name": "learn-redux-reveal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "(cd docs && reveal-md Presentation.md -w --theme custom)",
+    "build": "(cd docs && reveal-md Presentation.md --static --theme custom)"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zacaria/learn-redux-reveal.git"
+  },
+  "author": "Zacaria",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Zacaria/learn-redux-reveal/issues"
+  },
+  "homepage": "https://github.com/Zacaria/learn-redux-reveal#readme",
+  "dependencies": {
+    "reveal-md": "^0.3.4"
+  }
+}
