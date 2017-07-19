@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "(cd docs && reveal-md Presentation.md -w --theme custom)",
-    "build": "(cd docs && reveal-md Presentation.md --static --theme custom)"
+    "build": "(cd docs && reveal-md Presentation.md --static --theme custom)",
+    "clean": "rimraf docs/_static",
+    "deploy": "npm run clean && cd docs && npm run build && ls && npm run copyAssets && npm run surge",
+    "copyAssets": "cp -R docs/imgs docs/_static/ && cp -R docs/theme docs/_static",
+    "surge": "surge -d $npm_package_config_deploy_domain -p docs/_static"
   },
   "repository": {
     "type": "git",
@@ -19,5 +23,12 @@
   "homepage": "https://github.com/Zacaria/learn-redux-reveal#readme",
   "dependencies": {
     "reveal-md": "^0.3.4"
+  },
+  "config": {
+    "deploy_domain": "havesome-redux.surge.sh"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.1",
+    "surge": "^0.19.0"
   }
 }
