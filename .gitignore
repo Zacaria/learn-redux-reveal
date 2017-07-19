@@ -1,5 +1,7 @@
 .idea
 
+docs/_static
+
 # Logs
 logs
 *.log
