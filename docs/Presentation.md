@@ -38,15 +38,51 @@ Casting
 
 ---
 
-## DEV : Action creator
+## Store
+
+![](imgs/store.png)
+
+----
+
+## Store
+
+- Holds the state of the app as the single source of truth.
+<li class="fragment" data-fragment-index="1">
+Allows access to the state via `getState()`.
+</span>
+<li class="fragment" data-fragment-index="2">
+Allows the state to be updated via `dispatch(action)`.
+</span>
+<li class="fragment" data-fragment-index="3">
+Registers listeners via `subscribe(listener)`.
+</span>
+<li class="fragment" data-fragment-index="3">
+Handles listeners unregistering via the function returned by`subscribe(listener)`.
+</span>
+
+----
+
+How to: create a store
+
+```
+import { createStore } from 'redux';
+
+const store = createStore(reducers);
+```
+
+---
+
+## Action creator
 
 ![](imgs/action_creator.png)
 
-A function returning an action. <!-- .element: class="fragment" data-fragment-index="1" -->
-
-An action is an object having at least a type key which has a string value <!-- .element: class="fragment" data-fragment-index="2" -->
-
 ----
+
+## Action creator
+
+A function returning an action.
+
+An action is an object having at least a type key which has a string value <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```
 const editPDS = description => ({
@@ -54,20 +90,7 @@ const editPDS = description => ({
   description,
 });
 ```
-
----
-
-## Store
-
-Redux : Holds state of the app as the single source of truth.
-
-![](imgs/store.png)
-
-----
-
-Redux store shape
-
-![](imgs/redux_store.png)
+<!-- .element: class="fragment" data-fragment-index="2" -->
 
 ---
 
@@ -75,11 +98,13 @@ Redux store shape
 
 ![](imgs/reducer.png)
 
-Creates new versions of the state using action and current state. <!-- .element: class="fragment" data-fragment-index="1" -->
-
 ----
 
-Basic reducer
+## Reducers
+
+Creates new versions of the state using action and current state.
+
+How to: create a reducer <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```
 const orders = (state = false, action) => {
@@ -90,8 +115,9 @@ const orders = (state = false, action) => {
   return state;
 };
 ```
+<!-- .element: class="fragment" data-fragment-index="1" -->
 
-Always return state ! <!-- .element: class="fragment" data-fragment-index="1" -->
+Always return state ! <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ----
 
@@ -220,8 +246,8 @@ Combine reducers
 
 ```
 import { combineReducers } from 'redux';
-import orders from './ordersDuck';
-import offers from './offersDuck';
+import orders from './orders';
+import offers from './offers';
 
 const reducers = combineReducers({
   orders,
@@ -238,6 +264,8 @@ export default reducers;
 ![](imgs/views.png)
 
 ----
+
+## Views
 
 React stuff:
 
@@ -275,13 +303,30 @@ const mapDispatchToProps = dispatch => {
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
-Connect store and view <!-- .element: class="fragment" data-fragment-index="2" -->
+----
+
+Connect store and view
 
 ```
-connect(mapStateToProps, mapDispatchToProps)(PDSEditForm);
+export default connect(mapStateToProps, mapDispatchToProps)(PDSEditForm)
 ```
-<!-- .element: class="fragment" data-fragment-index="2" -->
 
+Use connected component inside Provider <!-- .element: class="fragment" data-fragment-index="1" -->
+
+```
+<Provider store={store}>
+  <PDSEditForm />
+</Provider>
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+----
+
+## View layer binding
+
+is react-redux <!-- .element: class="fragment" data-fragment-index="1" -->
+
+[the library](https://github.com/reactjs/react-redux) <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ---
 
@@ -291,67 +336,9 @@ connect(mapStateToProps, mapDispatchToProps)(PDSEditForm);
 
 ----
 
-```
-import { createStore } from 'redux';
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
+Component standing at the top-level application
 
-```
-// not redux ! It is a sugarcoat
-import { Provider } from 'react-redux';
-```
-<!-- .element: class="fragment" data-fragment-index="2" -->
-```
-import reducers  from './redux';
-// Init store
-const store = createStore(reducers);
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-```
-const Root = () => (
-```
-<!-- .element: class="fragment" data-fragment-index="0" -->
-```
-  <Provider store={store}>
-```
-<!-- .element: class="fragment" data-fragment-index="2" -->
-```
-    <div>
-      <ListMessage/>
-      <AddMessage/>
-    </div>
-```
-<!-- .element: class="fragment" data-fragment-index="0" -->
-```
-  </Provider>
-```
-<!-- .element: class="fragment" data-fragment-index="2" -->
-```
-);
-```
-<!-- .element: class="fragment" data-fragment-index="0" -->
-
-----
-
-```
-import { createStore } from 'redux';
-
-// not redux ! It is a sugarcoat
-import { Provider } from 'react-redux';
-
-import reducers  from './redux';
-// Init store
-const store = createStore(reducers);
-
-const Root = () => (
-  <Provider store={store}>
-    <div>
-      <ListMessage/>
-      <AddMessage/>
-    </div>
-  </Provider>
-);
-```
+Puts all team together to work well.
 
 ---
 
@@ -362,6 +349,70 @@ const Root = () => (
 ## Init store
 
 ![](imgs/start_1.png)
+
+----
+
+```
+import { createStore } from 'redux';
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+```
+// not redux ! It is a sugarcoat
+import { Provider } from 'react-redux';
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+```
+import reducers  from './redux';
+// Init store
+const store = createStore(reducers);
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+```
+const Root = () => (
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+```
+  <Provider store={store}>
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+```
+    <div>
+      <ListMessage/>
+      <AddMessage/>
+    </div>
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+```
+  </Provider>
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+```
+);
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+----
+
+```
+import { createStore } from 'redux';
+
+// not redux ! It is a sugarcoat
+import { Provider } from 'react-redux';
+
+import reducers  from './redux';
+// Init store
+const store = createStore(reducers);
+
+const Root = () => (
+  <Provider store={store}>
+    <div>
+      <ListMessage/>
+      <AddMessage/>
+    </div>
+  </Provider>
+);
+```
 
 ----
 
