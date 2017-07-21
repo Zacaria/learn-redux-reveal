@@ -83,14 +83,13 @@ The aim was just to enhance developer tools <!-- .element: class="fragment" data
 
 ---
 
-Histoire : Redux : Reduce + Flux
-Without redux: hoist
+## What Redux wants to do
 
-Gérer simplement des app complexes
-poser des contraintes pour avoir des garanties
+- Gather all application data on a single point : the store
+- Express store modification using objects : the actions
+- Modify the store at one place : the reducers
 
-https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367
-Developer friendly : tool demo
+
 
 ---
 
@@ -193,11 +192,9 @@ const orders = (state = false, action) => {
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
-Always return state <!-- .element: class="fragment" data-fragment-index="2" -->
-
-No mutation <!-- .element: class="fragment" data-fragment-index="3" -->
-
-Pure function <!-- .element: class="fragment" data-fragment-index="4" -->
+1. Always return state <!-- .element: class="fragment" data-fragment-index="2" -->
+2. No mutation <!-- .element: class="fragment" data-fragment-index="3" -->
+3. Pure function <!-- .element: class="fragment" data-fragment-index="4" -->
 
 
 ----
@@ -490,7 +487,7 @@ export default configureStore;
 
 ----
 
-Map Redux state to container props
+Map - inject - Redux state to container props
 
 ```
 const mapStateToProps = state => {
@@ -501,7 +498,7 @@ const mapStateToProps = state => {
 };
 ```
 
-Map store dispatch to container props <!-- .element: class="fragment" data-fragment-index="1" -->
+Map dispatchable as callback to container props <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```
 const mapDispatchToProps = dispatch => {
@@ -511,6 +508,9 @@ const mapDispatchToProps = dispatch => {
 };
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
+
+Triggered at each store update. <!-- .element: class="fragment" data-fragment-index="2  " -->
+
 
 ----
 
