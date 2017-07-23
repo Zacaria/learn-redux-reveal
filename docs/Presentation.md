@@ -61,6 +61,8 @@ At [react-europe 2015](https://www.youtube.com/watch?v=xsSnOQynTHs), Dan Abramov
 
 The aim was just to enhance developer tools <!-- .element: class="fragment" data-fragment-index="1" -->
 
+It turns out that this experiment became one of the most popular front-end pattern. <!-- .element: class="fragment" data-fragment-index="2" -->
+
 ----
 
 ## Hot Module Reload
@@ -75,21 +77,32 @@ The aim was just to enhance developer tools <!-- .element: class="fragment" data
 
 ---
 
-## Keep in mind
+## Front-end challenges
 
-- Without sanity checks, [99 lines](https://gist.github.com/gaearon/ffd88b0e4f00b22c3159) of code
-- A concept more than a library
-- [May not be suited](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367) for all projects
+- ✅ Structure & scalability <!-- .element: class="fragment" data-fragment-index="1" -->
 
----
+- ✅ Predictable UI <!-- .element: class="fragment" data-fragment-index="2" -->
 
-## What Redux wants to do
+- ✅ Mutation tracking <!-- .element: class="fragment" data-fragment-index="3" -->
+
+- ✅ Technology agnostic <!-- .element: class="fragment" data-fragment-index="4" -->
+
+----
+
+## How do we achieve it ?
 
 - Gather all application data on a single point : the store
 - Express store modification using objects : the actions
 - Modify the store at one place : the reducers
 
 
+---
+
+## Keep in mind
+
+- Without sanity checks, [99 lines](https://gist.github.com/gaearon/ffd88b0e4f00b22c3159) of code
+- A concept more than a library
+- [May not be suited](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367) for all projects
 
 ---
 
@@ -123,10 +136,16 @@ Handles listeners unregistering via the function returned by`subscribe(listener)
 
 ----
 
-How to: create a store
+How to create a store
 
 ```
 import { createStore } from 'redux';
+
+const reducers = (state, action) => {
+  // some logic with action
+  
+  return state
+};
 
 const store = createStore(reducers);
 ```
@@ -146,9 +165,11 @@ A function returning an action.
 An action is an object having at least a type key which has a string value <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```
+// description = 'Awesome description !'
+
 const editPDS = description => ({
   type: 'EDIT_PDS',
-  description,
+  description: description,
 });
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
@@ -163,13 +184,17 @@ const editPDS = description => ({
 
 ## Like Array.prototype.reduce()
 
+- Have a default value
+- Apply a function on each items of a collection
+- Output a new value
+
 ```
 const defaultCount = 0;
 const count = 5;
 
 const newCount = [count].reduce(
-    (state, action) => {
-        return state + action.value;
+    (total, currentValue) => {
+        return total + currentValue;
     },
     count || defaultCount
 );
@@ -182,12 +207,15 @@ const newCount = [count].reduce(
 Creates new versions of the state using action and current state.
 
 ```
-const orders = (state = false, action) => {
+// ordersState = false
+// action = { type: 'ACCEPT_ORDER' }
+
+const orders = (ordersState = false, action) => {
   if (action.type === 'ACCEPT_ORDER') {
       return true;
   }
 
-  return state;
+  return ordersState;
 };
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -305,7 +333,9 @@ const orders = (state, action) => {
 
 <!-- .slide: data-transition="none" -->
 
-Add some logic (again)
+```
+// state = [{id: '00', accepted: false }, {id: '01', accepted: false }]
+```
 
 ```
 const orders = (state, action) => {
@@ -327,6 +357,16 @@ const orders = (state, action) => {
   }
 };
 ```
+
+- What happens if `action.type === 'TOGGLE_SIDEBAR'` ? 
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+- What happens if `action === {id: '00'}` ? 
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+- What happens if `action === {type: 'ACCEPT_ORDER', id: '00'}` ? 
+<!-- .element: class="fragment" data-fragment-index="3" -->
+
 
 ----
 
