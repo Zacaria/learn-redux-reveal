@@ -14,20 +14,45 @@ https://github.com/Zacaria/learn-redux-reveal
 
 ---
 
-The aim of the talk is to understand the **concept** of Redux. <!-- .element: class="fragment" data-fragment-index="1" -->
-
-
+The aim of the talk is to understand the **concept** of Redux. 
 
 ---
 
 ## Program
 
-- Live code React
-- Context <!-- .element: class="fragment" data-fragment-index="1" -->
-- Actors <!-- .element: class="fragment" data-fragment-index="2" -->
-- Workflow <!-- .element: class="fragment" data-fragment-index="3" -->
-- Live code Redux
-- Example <!-- .element: class="fragment" data-fragment-index="4" -->
+- Live code React <!-- .element: class="fragment" data-fragment-index="1" -->
+- Context <!-- .element: class="fragment" data-fragment-index="2" -->
+- Actors <!-- .element: class="fragment" data-fragment-index="3" -->
+- Workflow <!-- .element: class="fragment" data-fragment-index="4" -->
+- Live code Redux <!-- .element: class="fragment" data-fragment-index="5" -->
+
+---
+
+## Plain React
+
+Subject : Shopping cart
+
+- Product list
+- Cart (which is a product list)
+- Product : id, name, price
+
+⚠️ Not always best practices <!-- .element: class="fragment" data-fragment-index="1" -->
+
+<a href="https://codesandbox.io/s/pr8jBE0Q" target="_blank">Let's go 👉</a> <!-- .element: class="fragment" data-fragment-index="2" -->
+
+----
+
+## What we did
+
+- We used internal state to hold components data 
+- In order to share state we hoisted state
+ 
+Problems:
+
+- Sharing data between component will be hard to handle
+- With a lot of nested components, we would need to manually pass data through each level
+- Not scalable
+- Data is bound to components
 
 ---
 
@@ -65,7 +90,7 @@ At [react-europe 2015](https://www.youtube.com/watch?v=xsSnOQynTHs), Dan Abramov
 
 The aim was just to enhance developer tools <!-- .element: class="fragment" data-fragment-index="1" -->
 
-It turns out that this experiment became one of the most popular front-end pattern. <!-- .element: class="fragment" data-fragment-index="2" -->
+It turns out that this experiment became more popular than flux. <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ----
 
@@ -78,18 +103,6 @@ It turns out that this experiment became one of the most popular front-end patte
 ## Time travel
 
 <img src="imgs/time_travel.gif" height="400px">
-
----
-
-## Front-end challenges
-
-- ✅ Structure & scalability <!-- .element: class="fragment" data-fragment-index="1" -->
-
-- ✅ Predictable UI <!-- .element: class="fragment" data-fragment-index="2" -->
-
-- ✅ Mutation tracking <!-- .element: class="fragment" data-fragment-index="3" -->
-
-- ✅ Technology agnostic <!-- .element: class="fragment" data-fragment-index="4" -->
 
 ----
 
@@ -134,7 +147,7 @@ Allows the state to be updated via `dispatch(action)`.
 <li class="fragment" data-fragment-index="3">
 Registers listeners via `subscribe(listener)`.
 </span>
-<li class="fragment" data-fragment-index="3">
+<li class="fragment" data-fragment-index="4">
 Handles listeners unregistering via the function returned by`subscribe(listener)`.
 </span>
 
@@ -164,23 +177,21 @@ const reducers = (state, action) => {
 const store = createStore(reducers, defaultValue);
 ```
 
+Please wait a little for reducers <!-- .element: class="fragment" data-fragment-index="1" -->
+
 ----
 
 Example
 
 ```
-// state = { id: 12 }
+// idState = { id: 12 }
 // action = { type: 'UPDATE_ID', id: 13 }
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
-```
-const idReducer = (state, action) => {
+const idReducer = (idState, action) => {
   if(action.type === 'UPDATE') {
     return { id: action.id }; // ??
   }
 
-  return state; // ??
+  return idState; // ??
 };
 
 const store = createStore(idReducer, { id: 12 });
@@ -203,7 +214,7 @@ const store = createStore({ toto: idReducer }, ???);
 
 ## Action creator
 
-A function returning an ~~object~~ action.
+A function returning an action.
 
 An action is an object having at least a type key which has a string value <!-- .element: class="fragment" data-fragment-index="1" -->
 
@@ -251,10 +262,10 @@ const orderReducer = () => {
 ...using an action and the current state slice. <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ```
-// ordersState = [1, 2, 3]
+// ordersState = false
 // action = { type: 'ACCEPT_ORDER' }
 
-const orderReducer = (ordersState = false, action) => {
+const orderReducer = (ordersState, action) => {
   if (action.type === 'ACCEPT_ORDER') {
       return true;
   }
@@ -391,7 +402,7 @@ const ordersReducer = (ordersState = [], action) => {
     case 'ACCEPT_ORDER':
       return acceptOrder(ordersState, action.id);
     case 'REJECT_ORDER':
-      return reject(ordersState, action.id);
+      return rejectOrder(ordersState, action.id);
     default:
       return ordersState;
   }
@@ -641,7 +652,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PDSEdit);`
+export default connect(mapStateToProps, mapDispatchToProps)(PDSEdit);
 ```
 
 ---
@@ -670,11 +681,25 @@ To get guarantees: <!-- .element: class="fragment" data-fragment-index="4" -->
 - Decouple what happened from how thing changes <!-- .element: class="fragment" data-fragment-index="6" -->
 - Mutation tracking <!-- .element: class="fragment" data-fragment-index="7" -->
 
+----
+
+## Front-end challenges
+
+- ✅ Structure & scalability <!-- .element: class="fragment" data-fragment-index="1" -->
+
+- ✅ Predictable UI <!-- .element: class="fragment" data-fragment-index="2" -->
+
+- ✅ Mutation tracking <!-- .element: class="fragment" data-fragment-index="3" -->
+
+- ✅ Technology agnostic <!-- .element: class="fragment" data-fragment-index="4" -->
+
+- ❓ Asynchronous <!-- .element: class="fragment" data-fragment-index="5" -->
+
 ---
 
 ## Live example
 
-<a href="https://codesandbox.io/s/j2pRG0Yol" target="_blank">
+<a href="https://codesandbox.io/s/QvPgmvl9" target="_blank">
     <img src="imgs/live_code.png" >
 </a>
 
@@ -682,7 +707,7 @@ To get guarantees: <!-- .element: class="fragment" data-fragment-index="4" -->
 
 Me if I have to show this slide
 
-<a href="https://codesandbox.io/s/QvPgmvl9" target="_blank">
+<a href="https://codesandbox.io/s/j2pRG0Yol" target="_blank">
     <img src="imgs/spongebob.gif" width="350px">
 </a>
 
