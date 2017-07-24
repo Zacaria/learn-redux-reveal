@@ -14,7 +14,9 @@ https://github.com/Zacaria/learn-redux-reveal
 
 ---
 
-The aim of the talk is to understand the **concept** of Redux
+The aim of the talk is to understand the **concept** of Redux. <!-- .element: class="fragment" data-fragment-index="1" -->
+
+
 
 ---
 
@@ -136,10 +138,20 @@ Handles listeners unregistering via the function returned by`subscribe(listener)
 
 ----
 
+## Store and state ?
+
+- Store is the container <!-- .element: class="fragment" data-fragment-index="1" -->
+
+- State is the content <!-- .element: class="fragment" data-fragment-index="2" -->
+
+----
+
 How to create a store
 
 ```
 import { createStore } from 'redux';
+
+const defaultValue = {};
 
 const reducers = (state, action) => {
   // some logic with action
@@ -147,8 +159,37 @@ const reducers = (state, action) => {
   return state
 };
 
-const store = createStore(reducers);
+const store = createStore(reducers, defaultValue);
 ```
+
+----
+
+Example
+
+```
+// state = { id: 12 }
+// action = { type: 'UPDATE_ID', id: 13 }
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+```
+const idReducer = (state, action) => {
+  if(action.type === 'UPDATE') {
+    return { id: action.id }; // ??
+  }
+
+  return state; // ??
+};
+
+const store = createStore(idReducer, { id: 12 });
+// store.getState() = { id: 12 }
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+```
+const store = createStore({ toto: idReducer }, ???);
+```
+<!-- .element: class="fragment" data-fragment-index="3" -->
 
 ---
 
@@ -160,19 +201,31 @@ const store = createStore(reducers);
 
 ## Action creator
 
-A function returning an action.
+A function returning an ~~object~~ action.
 
 An action is an object having at least a type key which has a string value <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```
-// description = 'Awesome description !'
-
 const editPDS = description => ({
   type: 'EDIT_PDS',
   description: description,
 });
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
+
+```
+editPDS('Awesome description'); // ??
+```
+<!-- .element: class="fragment" data-fragment-index="3" -->
+
+
+```
+{
+  type: 'EDIT_PDS',
+  description: 'Awesome description',
+}
+```
+<!-- .element: class="fragment" data-fragment-index="4" -->
 
 ---
 
@@ -182,48 +235,69 @@ const editPDS = description => ({
 
 ----
 
-## Like Array.prototype.reduce()
+## Reducers
 
-- Have a default value
-- Apply a function on each items of a collection
-- Output a new value
+Function creating a new version of the state... <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```
-const defaultCount = 0;
-const count = 5;
+const orderReducer = () => {
+    return {};
+}
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
 
-const newCount = [count].reduce(
-    (total, currentValue) => {
-        return total + currentValue;
+...using an action and the current state slice. <!-- .element: class="fragment" data-fragment-index="2" -->
+
+```
+// ordersState = [1, 2, 3]
+// action = { type: 'ACCEPT_ORDER' }
+
+const orderReducer = (ordersState = false, action) => {
+  if (action.type === 'ACCEPT_ORDER') {
+      return true;
+  }
+  return ordersState;
+};
+```
+<!-- .element: class="fragment" data-fragment-index="3" -->
+
+1. Always return state <!-- .element: class="fragment" data-fragment-index="2" -->
+2. Pure function <!-- .element: class="fragment" data-fragment-index="3" -->
+
+----
+
+Now lets say our state is
+
+```
+ordersState = [
+    {
+        id: 60,
+        accepted: false,
     },
-    count || defaultCount
-);
+    {
+        id: 70,
+        accepted: false,
+    }
+]
 ```
 
 ----
 
-## Reducers
-
-Creates new versions of the state using action and current state.
+And our pure function
 
 ```
-// ordersState = false
-// action = { type: 'ACCEPT_ORDER' }
+const acceptOrder = (orders, id) => {
+    const newOrders = orders.map(order => { // new array
+       if(order.id === id) {
+           return {...order, accepted: true};
+       }
+     });
 
-const orders = (ordersState = false, action) => {
-  if (action.type === 'ACCEPT_ORDER') {
-      return true;
-  }
-
-  return ordersState;
-};
+    return newOrders;
+}
 ```
-<!-- .element: class="fragment" data-fragment-index="1" -->
 
-1. Always return state <!-- .element: class="fragment" data-fragment-index="2" -->
-2. No mutation <!-- .element: class="fragment" data-fragment-index="3" -->
-3. Pure function <!-- .element: class="fragment" data-fragment-index="4" -->
-
+Updates an object of the given array <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ----
 
@@ -232,14 +306,7 @@ const orders = (ordersState = false, action) => {
 Classic pattern : reducer API
 
 ```
-const orders = (state, action) => {
-
-
-
-
-
-
-
+const ordersReducer = (ordersState = [], action) => {
 
 
 
@@ -258,15 +325,8 @@ const orders = (state, action) => {
 Switch on action type
 
 ```
-const orders = (state, action) => {
+const ordersReducer = (ordersState = [], action) => {
   switch (action.type) {
-
-
-
-
-
-
-
 
 
 
@@ -284,21 +344,14 @@ const orders = (state, action) => {
 Return state
 
 ```
-const orders = (state, action) => {
+const ordersReducer = (ordersState = [], action) => {
   switch (action.type) {
 
 
 
 
-
-
-
-
-
-
-
     default:
-      return state;
+      return ordersState;
   }
 };
 ```
@@ -310,21 +363,14 @@ const orders = (state, action) => {
 Add some logic
 
 ```
-const orders = (state, action) => {
+const ordersReducer = (ordersState = [], action) => {
   switch (action.type) {
     case 'ACCEPT_ORDER':
-      return state.map(order => {
-        if(order.id === action.id) {
-            return {...order, accepted: true};
-        }
-      });
-
-
-
+      return acceptOrder(ordersState, action.id);
 
 
     default:
-      return state;
+      return ordersState;
   }
 };
 ```
@@ -334,37 +380,35 @@ const orders = (state, action) => {
 <!-- .slide: data-transition="none" -->
 
 ```
-// state = [{id: '00', accepted: false }, {id: '01', accepted: false }]
+// ordersState = [{id: '00', accepted: false }, {id: '01', accepted: false }]
 ```
 
 ```
-const orders = (state, action) => {
+const ordersReducer = (ordersState = [], action) => {
   switch (action.type) {
     case 'ACCEPT_ORDER':
-      return state.map(order => {
-        if(order.id === action.id) {
-            return {...order, accepted: true};
-        }
-      });
+      return acceptOrder(ordersState, action.id);
     case 'REJECT_ORDER':
-      return state.map(order => {
-        if(order.id === action.id) {
-            return {...order, accepted: false};
-        }
-      });
+      return reject(ordersState, action.id);
     default:
-      return state;
+      return ordersState;
   }
 };
 ```
 
-- What happens if `action.type === 'TOGGLE_SIDEBAR'` ? 
+```
+action = { type: 'TOGGLE_SIDEBAR' } // ???
+```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
-- What happens if `action === {id: '00'}` ? 
+```
+action = { id: '00' } // ???
+```
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
-- What happens if `action === {type: 'ACCEPT_ORDER', id: '00'}` ? 
+```
+action = { type: 'ACCEPT_ORDER', id: '00' } // ???
+```
 <!-- .element: class="fragment" data-fragment-index="3" -->
 
 
@@ -374,16 +418,34 @@ Combine reducers
 
 ```
 import { combineReducers } from 'redux';
-import orders from './orders';
-import offers from './offers';
+import ordersReducer from './orders';
+import offersReducer from './offers';
 
 const reducers = combineReducers({
-  orders,
-  offers
+  orders: ordersReducer,
+  offers: offersReducer,
 });
 
 export default reducers;
 ```
+
+---
+
+## Get ready to plug !
+
+![](imgs/plug.png)
+
+----
+
+Init
+
+![](imgs/Redux_store_init.png)
+
+----
+
+Runtime
+
+<img src="imgs/Redux_store_runtime.png" height="550px">
 
 ---
 
@@ -439,6 +501,8 @@ Puts all team together to work well.
 
 ----
 
+<!-- .slide: data-transition="none" -->
+
 ```
 import { createStore } from 'redux';
 ```
@@ -479,6 +543,8 @@ const Root = () => (
 
 ----
 
+<!-- .slide: data-transition="none" -->
+
 ```
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
@@ -494,29 +560,6 @@ const Root = () => (
     </div>
   </Provider>
 );
-```
-
-----
-
-Reducers have the same shape as the store.
-
-```
-import {createStore, applyMiddleware} from 'redux';
-import todoApp from './reducers';
-import thunk from 'redux-thunk';
-import createLogger from 'redux-logger';
-
-const configureStore = () => {
-  //only plain object reach createLogger middleware and then reducers
-  const middlewares = [thunk];
-  if (process.env.NODE_ENV !== 'production') {
-    middlewares.push(createLogger());
-  }
-
-  return createStore(todoApp, applyMiddleware(...middlewares));
-};
-
-export default configureStore;
 ```
 
 ---
@@ -599,6 +642,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(PDSEdit);`
 
 ![](imgs/redux.gif)
 
+----
+
+![](imgs/reduxflow_2.gif)
 
 ---
 
@@ -618,6 +664,23 @@ To get guarantees: <!-- .element: class="fragment" data-fragment-index="4" -->
 
 ---
 
+## Live example
+
+<a href="https://codesandbox.io/s/j2pRG0Yol" target="_blank">
+    <img src="imgs/live_code.png" >
+</a>
+
+----
+
+Me if I have to show this slide
+
+<a href="https://codesandbox.io/s/QvPgmvl9" target="_blank">
+    <img src="imgs/spongebob.gif" width="350px">
+</a>
+
+
+---
+
 ## Credits
 
 > Dan Abramov: [<i class="fa fa-twitter" aria-hidden="true"></i>](https://twitter.com/dan_abramov?lang=fr) [<i class="fa fa-github" aria-hidden="true"></i>](https://github.com/gaearon)
@@ -629,18 +692,19 @@ To get guarantees: <!-- .element: class="fragment" data-fragment-index="4" -->
 
 ---
 
+# Thank you
+
+Question ? <!-- .element: class="fragment" data-fragment-index="1" -->
+
+---
+
 ## Links
 
-Main learning ref : 10 hours : http://redux.js.org/
-
-Videos :
-
-- lvl 1 : 121 min : https://egghead.io/courses/getting-started-with-redux
-- lvl 2 : 137 min : https://egghead.io/courses/building-react-applications-with-idiomatic-redux
-- react-europe : 30 min : https://www.youtube.com/watch?v=xsSnOQynTHs
-
-Articles :
-
-- 11 min : https://code-cartoons.com/a-cartoon-intro-to-redux-3afb775501a6
-
-Awesome list : https://github.com/brillout/awesome-redux
+- Main learning ref : 10 hours : http://redux.js.org/
+- Videos :
+    - lvl 1 : 121 min : [egghead 1](https://egghead.io/courses/getting-started-with-redux)
+    - lvl 2 : 137 min : [egghead 2](https://egghead.io/courses/building-react-applications-with-idiomatic-redux)
+    - react-europe : 30 min : [video](https://www.youtube.com/watch?v=xsSnOQynTHs)
+- Articles :
+    - 11 min : [cartoon](https://code-cartoons.com/a-cartoon-intro-to-redux-3afb775501a6)
+- Awesome list : https://github.com/brillout/awesome-redux
