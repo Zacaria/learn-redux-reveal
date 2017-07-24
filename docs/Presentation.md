@@ -127,6 +127,8 @@ It turns out that this experiment became more popular than flux. <!-- .element: 
 
 ![](imgs/minions.gif)
 
+Need a pause ? <!-- .element: class="fragment" data-fragment-index="2" -->
+
 ---
 
 ## Store
