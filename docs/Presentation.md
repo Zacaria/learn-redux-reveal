@@ -22,9 +22,11 @@ The aim of the talk is to understand the **concept** of Redux. <!-- .element: cl
 
 ## Program
 
+- Live code React
 - Context <!-- .element: class="fragment" data-fragment-index="1" -->
 - Actors <!-- .element: class="fragment" data-fragment-index="2" -->
 - Workflow <!-- .element: class="fragment" data-fragment-index="3" -->
+- Live code Redux
 - Example <!-- .element: class="fragment" data-fragment-index="4" -->
 
 ---
@@ -446,6 +448,12 @@ Init
 Runtime
 
 <img src="imgs/Redux_store_runtime.png" height="550px">
+
+----
+
+Code
+
+![](imgs/plug_code.png)
 
 ---
 
