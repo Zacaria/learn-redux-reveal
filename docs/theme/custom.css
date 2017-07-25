@@ -17,23 +17,3 @@ a {
 .overlay-title {
     background-color: rgba(200, 200, 200, 0.7);
 }
-
-section.two-columns {
-    /*background-color: #1b181b;*/
-    display: flex; !important;
-    height: 100%;
-}
-
-.two-columns * {
-    flex: 1;
-
-}
-
-.two-columns  .left {
-    /*background-color: #00AAAA;*/
-
-}
-.two-columns .right {
-    /*background-color: #00cc66;*/
-
-}
