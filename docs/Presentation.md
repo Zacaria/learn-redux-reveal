@@ -444,6 +444,9 @@ const reducers = combineReducers({
 export default reducers;
 ```
 
+Reducers is a reducer (function) that invokes every reducer inside the given object.
+And constructs a state object with the same shape (structure).
+
 ---
 
 ## Get ready to plug !
