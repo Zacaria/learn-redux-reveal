@@ -33,8 +33,8 @@ The aim of the talk is to understand the **concept** of Redux.
 Subject : Shopping cart
 
 - Product list
-- Cart (which is a product list)
-- Product : id, name, price
+- Product : { id, name, price }
+- Cart (which is a product list) : { product, count }
 
 ⚠️ Not always best practices <!-- .element: class="fragment" data-fragment-index="1" -->
 
@@ -704,7 +704,7 @@ To get guarantees: <!-- .element: class="fragment" data-fragment-index="4" -->
 
 ## Live example
 
-<a href="https://codesandbox.io/s/QvPgmvl9" target="_blank">
+<a href="https://codesandbox.io/s/pr8jBE0Q" target="_blank">
     <img src="imgs/live_code.png" >
 </a>
 
@@ -712,7 +712,7 @@ To get guarantees: <!-- .element: class="fragment" data-fragment-index="4" -->
 
 Me if I have to show this slide
 
-<a href="https://codesandbox.io/s/j2pRG0Yol" target="_blank">
+<a href="https://codesandbox.io/s/QvPgmvl9" target="_blank">
     <img src="imgs/spongebob.gif" width="350px">
 </a>
 
